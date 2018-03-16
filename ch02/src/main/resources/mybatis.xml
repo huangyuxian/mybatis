@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!-- 类型别名，意思就是给实体在使用的过程中起一个别名引用 -->
+    <typeAliases>
+        <!-- 方式一：给每一个实体类定义一个别名，通过alias制定别名 -->
+        <!--<typeAlias type="edu.nf.ch01.entity.Users" alias="user"/>-->
+        
+        <!-- 方式二：直接给实体所在的包来指定别名,那么别名就是实体的类名,
+                    并将首字母变为小写-->
+        <package name="edu.nf.ch02.entity"/>
+    </typeAliases>
+
+    <!-- environments用于配置数据源环境，可以同时指定多个数据源环境，
+         通过default属性来指定默认使用的数据源，对应的就是environment的id属性-->
+    <environments default="mysql">
+        <!-- 每一个environment都是一个独立的数据源环境配置,id指定唯一标识-->
+        <environment id="mysql">
+            <!-- 指定为使用本地事务，也就是JDBC事务 -->
+            <transactionManager type="JDBC"/>
+            <!-- mybatis本身就内置一个连接池，可以直接使用 -->
+            <dataSource type="POOLED">
+                <!-- 配置连接信息 -->
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf-8"/>
+                <property name="username" value="root"/>
+                <property name="password" value="root"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 指定mapper配置文件的相对路径 -->
+    <mappers>
+        <mapper resource="mapper/UserDao.xml"/>
+    </mappers>
+</configuration>    

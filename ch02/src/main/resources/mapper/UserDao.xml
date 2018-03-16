@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nf.ch02.dao.UserDao">
+
+    <!-- 主键生成策略 -->
+    <!--1. 自增长，通过指定useGeneratedKeys为true
+        并且使用keyProperty属性指定自增长的实体字段名-->
+    <!--<insert id="saveUser" parameterType="users" useGeneratedKeys="true" keyProperty="uid">
+      INSERT INTO USER_INFO(U_TEL, U_NAME) VALUES(#{tel},#{userName})
+    </insert>-->
+
+    <!--2. 使用sequence -->
+    <!-- 使用<selectKey>来配置序列,keyProperty含义同上，
+             resultType属性指定查询序列返回的类型,
+             order属性指定在什么时候生成这个序列
+                  before表示在执行sql之前先生成
+                  after表示在执行sql之后再生成-->
+    <!--<insert id="saveUser" parameterType="users">
+        <selectKey keyProperty="uid" resultType="int" order="BEFORE">
+           SELECT MY_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO USER_INFO(U_TEL, U_NAME) VALUES(#{tel},#{userName})
+    </insert>-->
+
+    <!--3. 使用uuid，这里可以使用数据库来生成uuid，
+           也可以通过程序来生成。
+           不同的数据库提供了不同的函数来生成uuid
+           mysql使用uuid(), oracle使用sys_guid()-->
+    <insert id="saveUser" parameterType="users">
+        <selectKey keyProperty="uid" resultType="java.lang.String" order="BEFORE">
+            SELECT UUID() FROM DUAL
+        </selectKey>
+        INSERT INTO USER_INFO(U_ID, U_TEL, U_NAME) VALUES(#{uid}, #{tel}, #{userName})
+    </insert>
+
+</mapper>

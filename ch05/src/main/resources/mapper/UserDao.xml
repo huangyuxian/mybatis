@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nf.ch05.dao.UserDao">
+
+    <resultMap id="userMap" type="users">
+        <id property="uid" column="U_ID"/>
+        <result property="tel" column="U_TEL"/>
+        <result property="userName" column="U_NAME"/>
+    </resultMap>
+
+    <!-- 多个查询参数，这里不能使用parameterType,
+         而是使用#{param下标}的方式来传参，例如：#{param1}表示第一个参数
+         #{param2}表示第二个参数,以此类推-->
+    <select id="findUserByCondition1" resultMap="userMap">
+        SELECT * FROM USER_INFO WHERE U_NAME = #{param1} AND U_TEL = #{param2}
+    </select>
+
+    <!-- 使用map封装多个条件参数,parameterType指定为map,
+         #{}中的参数对应map中的key-->
+    <select id="findUserByCondition2" parameterType="java.util.Map" resultMap="userMap">
+        SELECT * FROM USER_INFO WHERE U_NAME = #{userName} AND U_TEL = #{tel}
+    </select>
+
+    <!-- 使用实体对象封装多个条件参数, parameterType引用实体类的别名,
+         #{}中的参数对应是实体的字段名-->
+    <select id="findUserByCondition3" parameterType="users" resultMap="userMap">
+        SELECT * FROM USER_INFO WHERE U_NAME = #{userName} AND U_TEL = #{tel}
+    </select>
+
+    <!-- 模糊查询 -->
+    <select id="findUsers" parameterType="java.lang.String" resultMap="userMap">
+        SELECT * FROM USER_INFO WHERE U_TEL LIKE #{tel}"%"
+    </select>
+
+</mapper>

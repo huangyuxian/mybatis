@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nf.ch07.dao.UserDao">
+
+    <!-- 配置user的resultMap -->
+    <resultMap id="userMap" type="users">
+        <id property="uid" column="u_id"/>
+        <result property="userName" column="u_name"/>
+        <!--
+          使用association一对一关联身份证,property指定关联的字段，
+          resultMap引用card的resultMap的id
+         -->
+        <association property="card" resultMap="cardMap"/>
+        <!--
+          使用collection一对多关联联系电话
+        -->
+        <collection property="tels" resultMap="telMap"/>
+        <!--
+          使用collection多对多关联地址
+         -->
+        <collection property="addresses" resultMap="addrMap"/>
+    </resultMap>
+
+    <!-- 配置card的resultMap-->
+    <resultMap id="cardMap" type="idCard">
+        <id property="cid" column="c_id"/>
+        <result property="cardNumber" column="c_number"/>
+    </resultMap>
+
+    <!-- 配置tel的resultMap-->
+    <resultMap id="telMap" type="tel">
+        <id property="tid" column="t_id"/>
+        <result property="telNumber" column="t_number"/>
+    </resultMap>
+
+    <!-- 配置address的resultMap -->
+    <resultMap id="addrMap" type="address">
+        <id property="aid" column="a_id"/>
+        <result property="address" column="address"/>
+    </resultMap>
+
+    <!-- 关联查询 -->
+    <select id="findUserById" parameterType="int" resultMap="userMap">
+        SELECT * FROM USER_INFO U INNER JOIN CARD_INFO C ON C.U_ID = U.U_ID
+        INNER JOIN TEL_INFO T ON T.U_ID = U.U_ID INNER JOIN USER_ADDR UR
+        ON UR.U_ID = U.U_ID INNER JOIN ADDR_INFO A ON UR.A_ID = A.A_ID
+        WHERE U.U_ID = #{uid}
+    </select>
+
+</mapper>

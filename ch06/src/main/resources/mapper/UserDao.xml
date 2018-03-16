@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nf.ch06.dao.UserDao">
+
+    <resultMap id="userMap" type="users">
+        <id property="uid" column="U_ID"/>
+        <result property="tel" column="U_TEL"/>
+        <result property="userName" column="U_NAME"/>
+    </resultMap>
+
+    <!-- 动态拼接条件, 使用<where>标签配置，在if中判断map的key是否为空，
+         不为空则拼接到sql语句中-->
+    <select id="findByCondition1" parameterType="java.util.Map" resultMap="userMap">
+        SELECT * FROM USER_INFO
+        <where>
+            <if test="uname != null and uname != ''">
+                U_NAME = #{uname}
+            </if>
+            <if test="tel != null and tel != ''">
+                AND U_TEL = #{tel}
+            </if>
+        </where>
+    </select>
+
+    <!-- 动态选择条件，使用<choose>标签配置,<otherwise>是在选择条件之后的一个可选项 -->
+    <select id="findByCondition2" parameterType="java.util.Map" resultMap="userMap">
+        SELECT * FROM USER_INFO
+        <choose>
+            <when test="uname != null and uname != ''">
+                WHERE U_NAME = #{uname}
+            </when>
+            <when test="tel != null and tel != ''">
+                WHERE U_TEL = #{tel}
+            </when>
+            <otherwise>
+                ORDER BY U_NAME DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 使用<foreach>抱歉循环迭代参数，适用于or和in子句 -->
+    <select id="findByCondition3" parameterType="java.util.Map" resultMap="userMap">
+        SELECT * FROM USER_INFO
+        <where>
+            <if test="telList != null">
+                <foreach collection="telList" item="t">
+                    OR U_TEL = #{t}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- in子查询，
+         例如：SELECT * FROM USER_INFO WHERE U_TEL IN ('12345678911', '13570566657', '12356789022'); -->
+    <select id="findByCondition4" parameterType="java.util.Map" resultMap="userMap">
+        SELECT * FROM USER_INFO
+        <where>
+            U_TEL IN
+            <if test="telList != null">
+                <foreach collection="telList" item="t" open="(" separator="," close=")">
+                    #{t}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 使用<set>标签配置，实现动态更新字段 -->
+    <update id="updateUser" parameterType="users">
+        UPDATE USER_INFO
+        <set>
+            <if test="userName != null and userName != ''">
+                U_NAME = #{userName},
+            </if>
+            <if test="tel != null and tel != ''">
+                U_TEL = #{tel}
+            </if>
+        </set>
+        WHERE U_ID = #{uid}
+    </update>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nf.ch09.dao.UserDao">
+
+    <!-- 配置userMap -->
+    <resultMap id="userMap" type="users">
+        <id property="uid" column="u_id"/>
+        <result property="userName" column="u_name"/>
+        <!-- 一对一关联身份证 -->
+        <association property="card" resultMap="cardMap"/>
+        <!-- 一对多关联联系电话-->
+        <collection property="tels" resultMap="telMap"/>
+    </resultMap>
+
+    <!-- 配置cardMap-->
+    <resultMap id="cardMap" type="idCard">
+        <id property="cid" column="c_id"/>
+        <result property="cardNumber" column="c_number"/>
+    </resultMap>
+
+    <!-- 配置telMap-->
+    <resultMap id="telMap" type="tel">
+        <id property="tid" column="t_id"/>
+        <result property="telNumber" column="t_number"/>
+    </resultMap>
+</mapper>

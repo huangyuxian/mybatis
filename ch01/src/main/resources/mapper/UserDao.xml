@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- mapper指定要映射的Dao接口的完整类名,通过namespace属性指定-->
+<mapper namespace="edu.nf.ch01.dao.UserDao">
+
+    <!-- 通过insert节点来映射UserDao中的saveUser方法,
+         id指定接口中的方法名,parameterType指定参数的类型，
+         这里直接引用在mybatis.xml中定义的别名-->
+    <!-- 在<insert>标签内部编写相应的sql语句，并指定sql参数，
+         sql参数使用#{属性名}来获取对象中的属性值-->
+    <insert id="saveUser" parameterType="users">
+      INSERT INTO USER_INFO VALUES(#{uid},#{tel},#{userName})
+    </insert>
+
+    <!-- 如果parameterType是Map类型，
+         那么#{}中的参数对应的是map的key -->
+    <insert id="saveUser2" parameterType="java.util.Map">
+      INSERT INTO USER_INFO VALUES(#{uid},#{tel},#{uname})
+    </insert>
+
+    <!-- 映射修改语句 -->
+    <update id="updateUser" parameterType="users">
+        UPDATE USER_INFO SET U_NAME = #{userName} WHERE U_ID = #{uid}
+    </update>
+
+    <!-- 映射删除语句
+         parameterType指定为String类型，也可以是其他的基本数据类型
+         注意：当参数只有一个，并且不是一个实体对象的时候，
+         那么#{}中的变量名可以任意-->
+    <delete id="deleteUser" parameterType="java.lang.String">
+        DELETE FROM USER_INFO WHERE U_ID = #{aa}
+    </delete>
+
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nf.ch07.dao.TelDao">
+
+    <!-- telMap-->
+    <resultMap id="telMap" type="tel">
+        <id property="tid" column="t_id"/>
+        <result property="telNumber" column="t_number"/>
+        <!-- 多对一关联user -->
+        <association property="user" resultMap="userMap"/>
+    </resultMap>
+
+    <!-- userMap -->
+    <resultMap id="userMap" type="users">
+        <id property="uid" column="u_id"/>
+        <result property="userName" column="u_name"/>
+    </resultMap>
+
+    <select id="findTelByTelNumber" parameterType="java.lang.String" resultMap="telMap">
+        SELECT * FROM TEL_INFO T INNER JOIN USER_INFO U ON T.U_ID = U.U_ID
+        WHERE T.T_NUMBER = #{tel}
+    </select>
+
+</mapper>

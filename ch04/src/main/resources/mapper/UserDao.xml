@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nf.ch04.dao.UserDao">
+
+    <!-- 定义resultMap，id作为唯一标识，
+         type指定类型，这里引用Users实体的别名 -->
+    <resultMap id="userMap" type="users">
+        <!-- 映射主键，property指定实体的字段名，column指定表的列名 -->
+        <id property="uid" column="U_ID"/>
+        <!-- 映射其他字段-->
+        <result property="tel" column="U_TEL"/>
+        <result property="userName" column="U_NAME"/>
+    </resultMap>
+
+    <!-- 使用resultMap映射结果集,
+         这里的resultMap属性引用上面声明的resultMap配置的id
+    -->
+    <!-- 查询单条记录 -->
+    <select id="findUserById" parameterType="java.lang.String" resultMap="userMap">
+        SELECT * FROM USER_INFO WHERE U_ID = #{uid}
+    </select>
+
+    <!-- 查询多条记录-->
+    <select id="findUsers" resultMap="userMap">
+        SELECT * FROM USER_INFO
+    </select>
+
+</mapper>
